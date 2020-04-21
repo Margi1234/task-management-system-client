@@ -210,9 +210,13 @@ const UsersTable = (props) => {
     var userId = { id: i };
     console.log('userid', userId);
     axios
-      .delete('http://localhost:5000/api/users/deleteAdminUser', {
-        data: userId
-      })
+      .delete(
+        'https://taskmanagementsystemserver.herokuapp.com/api/users/deleteAdminUser',
+        // 'http://localhost:5000/api/users/deleteAdminUser'
+        {
+          data: userId
+        }
+      )
       .then((res) => {
         var stat = res.status;
         if (stat === 200) {

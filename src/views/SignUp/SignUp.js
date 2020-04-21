@@ -203,7 +203,11 @@ class SignUp extends Component {
   registerUser = (userData, history) => {
     console.log(userData);
     axios
-      .post('http://localhost:5000/api/users/register', userData)
+      .post(
+        'https://taskmanagementsystemserver.herokuapp.com/api/users/register',
+        // 'http://localhost:5000/api/users/register'
+        userData
+      )
       .then((res) => {
         this.setState({ errors: res });
         console.log('errors ', this.state.errors);

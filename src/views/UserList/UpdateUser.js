@@ -49,7 +49,11 @@ const UpdateUser = (props) => {
     console.log('in updating');
     console.log(values);
     axios
-      .put('http://localhost:5000/api/users/updateUser', values)
+      .put(
+        'https://taskmanagementsystemserver.herokuapp.com/api/users/updateUser',
+        // 'http://localhost:5000/api/users/updateUser'
+        values
+      )
       .then((res) => {
         if (res.status == 200) {
           successMessage(true);

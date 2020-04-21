@@ -23,7 +23,10 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/users/getAdminUserData')
+      .get(
+        'https://taskmanagementsystemserver.herokuapp.com/api/users/getAdminUserData'
+        // 'http://localhost:5000/api/users/getAdminUserData'
+      )
       .then((res) => {
         console.log(res);
         setUsers(res.data);

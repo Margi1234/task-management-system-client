@@ -56,7 +56,11 @@ class ForgotPassword extends Component {
     const userEmail = { email: this.state.email };
 
     axios
-      .post('http://localhost:5000/api/users/passwordreset', userEmail)
+      .post(
+        'https://taskmanagementsystemserver.herokuapp.com/api/users/passwordreset',
+        // 'http://localhost:5000/api/users/passwordreset',
+        userEmail
+      )
       .then((res) => {
         console.log('password reset token', res.data);
         localStorage.setItem('passwordResetToken', res.data);

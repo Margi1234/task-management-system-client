@@ -9,7 +9,7 @@ import {
   // TotalProfit,
   // LatestSales,
   // UsersByDevice,
-  // LatestProducts,
+  // LatestProducts
   // LatestOrders
 } from './components';
 import auth from '../../common/auth';
@@ -33,30 +33,31 @@ class Dashboard extends Component {
     return (
       <div className={classes.root}>
         <Grid container spacing={4}>
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
+          <Grid item>
             <Budget />
           </Grid>
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
-            {/* <TotalUsers /> */}
+
+          {/* <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TotalUsers />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            {/* <TasksProgress /> */}
+            <TasksProgress />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            {/* <TotalProfit /> */}
+            <TotalProfit />
           </Grid>
           <Grid item lg={8} md={12} xl={9} xs={12}>
-            {/* <LatestSales /> */}
+            <LatestSales />
           </Grid>
           <Grid item lg={4} md={6} xl={3} xs={12}>
-            {/* <UsersByDevice /> */}
+            <UsersByDevice />
           </Grid>
           <Grid item lg={4} md={6} xl={3} xs={12}>
-            {/* <LatestProducts /> */}
+            <LatestProducts />
           </Grid>
           <Grid item lg={8} md={12} xl={9} xs={12}>
-            {/* <LatestOrders /> */}
-          </Grid>
+            <LatestOrders />
+          </Grid> */}
         </Grid>
       </div>
     );

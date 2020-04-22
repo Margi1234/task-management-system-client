@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Loader from 'react-loader-spinner';
-import { UsersToolbar, UsersTable } from './components';
+import { UsersToolbar } from './components';
 // import mockData from './data';
 import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
@@ -21,20 +21,32 @@ const UserList = () => {
   const classes = useStyles();
   const [load, setLoad] = useState(false);
   const [users, setUsers] = useState([]);
+  const [values, setValues] = useState({
+    name: '',
+    email: '',
+    type: '',
+    status: ''
+  });
   useEffect(() => {
+    setLoad(false);
+    let email = values.email;
+    let name = values.name;
+    let type = values.type;
+    let status = values.email;
     axios
       .get(
-        'https://taskmanagementsystemserver.herokuapp.com/api/users/getAdminUserData'
-        // 'http://localhost:5000/api/users/getAdminUserData'
+        `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
       )
       .then((res) => {
         console.log(res);
         setUsers(res.data);
         setLoad(true);
+        if (users) {
+        }
       })
       .catch((err) => {
         // setError(err.message);
-        // setLoad(true)
+        setLoad(true);
       });
   }, []);
   if (load) {
@@ -42,7 +54,7 @@ const UserList = () => {
       <div className={classes.root}>
         <UsersToolbar />
         <div className={classes.content}>
-          <UsersTable users={users} />
+          {/* <UsersTable users={users} /> */}
         </div>
       </div>
     );

@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Modal from './Modal';
 import useModal from './useModal';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-// import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import {
@@ -14,7 +13,7 @@ import {
   CardActions,
   CardContent,
   // Avatar,
-  Checkbox,
+  // Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -23,12 +22,9 @@ import {
   Typography,
   TablePagination
 } from '@material-ui/core';
-// import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-// import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import axios from 'axios';
-// import { getInitials } from 'helpers';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -80,31 +76,6 @@ const useStyles = makeStyles((theme) => ({
     width: 1
   }
 }));
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
 
 const headCells = [
   {
@@ -143,19 +114,14 @@ function EnhancedTableHead(props) {
     console.log('hi sorting');
     onRequestSort(event, property);
   };
-  // const dummyFunction = () => {
-  //   console.log('myfunction');
-  // };
-
   return (
     <TableHead>
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            // align={headCell.numeric ? 'right' : 'left'}
-            // padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}>
+            // sortDirection={orderBy === headCell.id ? order : false}
+          >
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
@@ -177,25 +143,54 @@ function EnhancedTableHead(props) {
 
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
+  // numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
+  // onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  orderBy: PropTypes.string.isRequired
+  // rowCount: PropTypes.number.isRequired
 };
 
 const UsersTable = (props) => {
-  const { className, users, ...rest } = props;
-  // const { history } = props;
+  let { className, users, ...rest } = props;
   const { isShowing, toggle } = useModal();
   const classes = useStyles();
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
-
+  // const [users, setUsers] = useState([]);
   // const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [values, setValues] = useState({
+    name: '',
+    email: '',
+    type: '',
+    status: ''
+  });
+  useEffect(() => {
+    console.log('in use effect');
+    console.log(orderBy);
+    console.log(order);
+    //   setValues((values) => ({ ...values }));
+    //   // setLoad(false);
+    //   let email = values.email;
+    //   let name = values.name;
+    //   let type = values.type;
+    //   let status = values.status;
+    //   axios
+    //     .get(
+    //       `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
+    //     )
+    //     .then((res) => {
+    //       console.log(res);
+    //       // setUsers(res.data);
+    //       // setLoad(true);
+    //     })
+    //     .catch((err) => {
+    //       // setError(err.message);
+    //       // setLoad(true);
+    //     });values.name, values.email, values.type, values.status
+  }, []);
   const handlePageChange = (event, page) => {
     setPage(page);
   };
@@ -204,28 +199,20 @@ const UsersTable = (props) => {
     setRowsPerPage(event.target.value);
   };
   const handleDelete = (id) => {
-    // event.preventDefault();
-    // console.log('email is ', id);
     var i = id;
     var userId = { id: i };
     console.log('userid', userId);
     axios
-      .delete(
-        'https://taskmanagementsystemserver.herokuapp.com/api/users/deleteAdminUser',
-        // 'http://localhost:5000/api/users/deleteAdminUser'
-        {
-          data: userId
-        }
-      )
+      .delete('http://localhost:5000/api/users/deleteAdminUser', {
+        data: userId
+      })
       .then((res) => {
         var stat = res.status;
         if (stat === 200) {
-          // history.push('/users');
           window.location.reload();
         }
         console.log(res.status);
       });
-    // console.log(key);
   };
   const handleEdit = (id, name, email, status, type) => {
     var userData = {
@@ -242,9 +229,23 @@ const UsersTable = (props) => {
     localStorage.setItem('updateStatus', userData.status);
   };
   const handleRequestSort = (event, property) => {
+    console.log('property is ', property);
+
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
+    console.log('orderby', orderBy);
+    console.log('order', order);
+    var data = { ordBy: property, ord: order };
+    console.log(data);
+    axios
+      .post('http://localhost:5000/api/users/sortUsers', data)
+      .then((res) => {
+        // console.log(res);
+        // setUsers(res);
+        // setUsers(res.data);
+        console.log('response is ', users);
+      });
   };
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -278,7 +279,8 @@ const UsersTable = (props) => {
               {/* </TableRow>
               </TableHead>  */}
               <TableBody>
-                {stableSort(users, getComparator(order, orderBy))
+                {/* {stableSort(users, getComparator(order, orderBy)) */}
+                {users
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((user) => (
                     <TableRow className={classes.tableRow} hover key={user.id}>
@@ -359,8 +361,8 @@ const UsersTable = (props) => {
 };
 
 UsersTable.propTypes = {
-  className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  className: PropTypes.string
+  // users: PropTypes.array.isRequired
 };
 
 export default UsersTable;
@@ -397,3 +399,29 @@ export default UsersTable;
 
 //   setSelectedUsers(newSelectedUsers);
 // };
+
+// function descendingComparator(a, b, orderBy) {
+//   if (b[orderBy] < a[orderBy]) {
+//     return -1;
+//   }
+//   if (b[orderBy] > a[orderBy]) {
+//     return 1;
+//   }
+//   return 0;
+// }
+
+// function getComparator(order, orderBy) {
+//   return order === 'desc'
+//     ? (a, b) => descendingComparator(a, b, orderBy)
+//     : (a, b) => -descendingComparator(a, b, orderBy);
+// }
+
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) return order;
+//     return a[1] - b[1];
+//   });
+//   return stabilizedThis.map((el) => el[0]);
+// }

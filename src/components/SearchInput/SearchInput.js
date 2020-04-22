@@ -53,3 +53,7 @@ export default SearchInput;
 
 // https://marmelab.com/react-admin/Tutorial.html
 // https://dev.to/iam_timsmith/lets-build-a-search-bar-in-react-120j
+
+// https://material-table.com/#/docs/features/filtering
+
+// https://www.youtube.com/watch?v=SX_IL7LqSxM

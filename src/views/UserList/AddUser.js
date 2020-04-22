@@ -48,11 +48,7 @@ const AddUser = (props) => {
     console.log('in adding');
     console.log(values);
     axios
-      .post(
-        'https://taskmanagementsystemserver.herokuapp.com/api/users/users/add',
-        // 'http://localhost:5000/api/users/users/add'
-        values
-      )
+      .post('http://localhost:5000/api/users/users/add', values)
       .then((res) => {
         if (res.data.error === false) {
           successMessage(true);

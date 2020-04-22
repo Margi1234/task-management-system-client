@@ -53,11 +53,7 @@ class ResetPassword extends Component {
     };
     if (this.state.newPassword === this.state.confirmPassword) {
       axios
-        .post(
-          'https://taskmanagementsystemserver.herokuapp.com/api/users/setpassword',
-          // 'http://localhost:5000/api/users/setpassword'
-          data
-        )
+        .post('http://localhost:5000/api/users/setpassword', data)
         .then((res) => {
           console.log(res.data);
           console.log('new password setting done');

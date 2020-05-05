@@ -8,6 +8,7 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
 import Loader from 'react-loader-spinner';
+
 import {
   Button,
   Card,
@@ -84,6 +85,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const headCells = [
+  { id: 'empid', label: 'Employee ID' },
   {
     id: 'name',
     label: 'Name'
@@ -93,15 +95,55 @@ const headCells = [
     label: 'Email'
   },
   {
-    id: 'type',
-    label: 'Type'
+    id: 'gender',
+    label: 'Gender'
   },
   {
-    id: 'status',
-    label: 'Status'
+    id: 'dob',
+    label: 'Date of Birth'
   },
   {
-    id: 'actions',
+    id: 'permanentaddress',
+    label: 'Permanent Address'
+  },
+  {
+    id: 'currentaddress',
+    label: 'Current Address'
+  },
+  {
+    id: 'contact',
+    label: 'Contact'
+  },
+  {
+    id: 'offficeemail',
+    label: 'Office Email'
+  },
+  {
+    id: 'officeno',
+    label: 'Office No'
+  },
+  {
+    id: 'reportingperson',
+    label: 'Reporting Person'
+  },
+  {
+    id: 'department',
+    label: 'Department'
+  },
+  {
+    id: 'designation',
+    label: 'Designation'
+  },
+  {
+    id: 'doj',
+    label: 'Date of Joining'
+  },
+  {
+    id: 'skypename',
+    label: 'Skype Name'
+  },
+  {
+    id: 'Actions',
     label: 'Actions'
   }
 ];
@@ -168,25 +210,25 @@ const EmployeeTable = (props) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
 
-  // useEffect(() => {
-  //   setLoad(false);
-  //   setUsers(users);
-  //   var data = {
-  //     ordBy: orderBy,
-  //     ord: order,
-  //     fil: fil,
-  //     rows: rowsPerPage,
-  //     page: page
-  //   };
-  //   axios
-  //     .post('http://localhost:5000/api/users/sortUsers', data)
-  //     .then((res) => {
-  //       setLoad(true);
-  //       setUsers(res.data);
-  //       console.log(newUsers);
-  //       console.log('response is ', res.data);
-  //     });
-  // }, [fil, rowsPerPage, page, order, orderBy]);
+  useEffect(() => {
+    setLoad(false);
+    setUsers(users);
+    var data = {
+      ordBy: orderBy,
+      ord: order,
+      fil: fil,
+      rows: rowsPerPage,
+      page: page
+    };
+    axios
+      .post('http://localhost:5000/api/users/sortEmployees', data)
+      .then((res) => {
+        setLoad(true);
+        setUsers(res.data);
+        console.log(newUsers);
+        console.log('response is ', res.data);
+      });
+  }, [fil, rowsPerPage, page, order, orderBy]);
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -200,7 +242,7 @@ const EmployeeTable = (props) => {
     var userId = { id: i };
     console.log('userid', userId);
     axios
-      .delete('http://localhost:5000/api/users/deleteAdminUser', {
+      .delete('http://localhost:5000/api/users/deleteEmployee', {
         data: userId
       })
       .then((res) => {
@@ -211,19 +253,62 @@ const EmployeeTable = (props) => {
         console.log(res.status);
       });
   };
-  const handleEdit = (id, name, email, status, type) => {
+  const handleEdit = (
+    id,
+    empid,
+    name,
+    email,
+    gender,
+    dob,
+    permanentaddress,
+    currentaddress,
+    contact,
+    offficeemail,
+    officeno,
+    reportingperson,
+    department,
+    designation,
+    doj,
+    skypename
+  ) => {
     var userData = {
       id: id,
+      empid: empid,
       name: name,
       email: email,
-      status: status,
-      type: type
+      gender: gender,
+      dob: dob,
+      permanentaddress: permanentaddress,
+      currentaddress: currentaddress,
+      contact: contact,
+      offficeemail: offficeemail,
+      officeno: officeno,
+      // reportingperson : ,
+      // department,
+      designation: designation,
+      doj: doj,
+      skypename: skypename
     };
     localStorage.setItem('updateId', userData.id);
-    localStorage.setItem('updateEmail', userData.email);
-    localStorage.setItem('updateName', userData.name);
-    localStorage.setItem('updateType', userData.type);
-    localStorage.setItem('updateStatus', userData.status);
+    localStorage.setItem('updateSkypeName', userData.skypename);
+    localStorage.setItem('updateEmployeeId', userData.empid);
+    localStorage.setItem('updateEmployeeEmail', userData.email);
+    localStorage.setItem('updateEmployeeName', userData.name);
+    localStorage.setItem('updateEmployeeGender', userData.gender);
+    localStorage.setItem('updateEmployeedob', userData.dob);
+    localStorage.setItem('updateEmployeeoffficeemail', userData.offficeemail);
+    localStorage.setItem('updateEmployeecontact', userData.contact);
+    localStorage.setItem('updateEmployeeofficeno', userData.officeno);
+    localStorage.setItem('updateEmployeeDesignation', userData.designation);
+    localStorage.setItem('updateEmployeedoj', userData.doj);
+    localStorage.setItem(
+      'updateEmployeePermanentAddress',
+      userData.permanentaddress
+    );
+    localStorage.setItem(
+      'updateEmployeeCurrentAddress',
+      userData.currentaddress
+    );
   };
   const handleRequestSort = (event, property) => {
     console.log('property is ', property);
@@ -243,13 +328,6 @@ const EmployeeTable = (props) => {
       page: page
     };
     console.log(data);
-    // axios
-    //   .post('http://localhost:5000/api/users/sortUsers', data)
-    //   .then((res) => {
-    //     setUsers(res.data);
-    //     console.log(newUsers);
-    //     console.log('response is ', res.data);
-    //   });
   };
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -295,6 +373,7 @@ const EmployeeTable = (props) => {
                         value="true"
                       />
                     </TableCell> */}
+                      <TableCell>{user.empid}</TableCell>
                       <TableCell>
                         <div className={classes.nameContainer}>
                           {/* <Avatar className={classes.avatar} src={user.avatarUrl}>
@@ -304,18 +383,39 @@ const EmployeeTable = (props) => {
                         </div>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.type}</TableCell>
-                      <TableCell>{user.status}</TableCell>
+                      <TableCell>{user.gender}</TableCell>
+                      <TableCell>{user.dob}</TableCell>
+                      <TableCell>{user.permanentaddress}</TableCell>
+                      <TableCell>{user.currentaddress}</TableCell>
+                      <TableCell>{user.contact}</TableCell>
+                      <TableCell>{user.offficeemail}</TableCell>
+                      <TableCell>{user.officeno}</TableCell>
+                      <TableCell>{user.reportingperson}</TableCell>
+                      <TableCell>{user.department}</TableCell>
+                      <TableCell>{user.designation}</TableCell>
+                      <TableCell>{user.doj}</TableCell>
+                      <TableCell>{user.skypename}</TableCell>
                       <TableCell>
                         <Link to={'employees/update'}>
                           <Button
                             onClick={() => {
                               handleEdit(
                                 user.id,
+                                user.empid,
                                 user.name,
                                 user.email,
-                                user.status,
-                                user.type
+                                user.gender,
+                                user.dob,
+                                user.permanentaddress,
+                                user.currentaddress,
+                                user.contact,
+                                user.offficeemail,
+                                user.officeno,
+                                user.reportingperson,
+                                user.department,
+                                user.designation,
+                                user.doj,
+                                user.skypename
                               );
                             }}
                             className={classes.editBtn}>

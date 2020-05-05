@@ -18,7 +18,7 @@ import {
   Grid,
   TextField
 } from '@material-ui/core';
-import axios from 'axios';
+// import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   root: {},
   row: {
@@ -67,24 +67,21 @@ const UsersToolbar = (props) => {
   });
   useEffect(() => {
     setValues((values) => ({ ...values }));
+    // console.log('in userstoolbar', values);
+    // axios
+    //   .post(
+    //     `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
+    //   )
+    //   .then((res) => {
+    //     console.log(res);
+    //     setUsers(res.data);
+    //     // setLoad(true);
+    //   })
+    //   .catch((err) => {
+    //     // setError(err.message);
+    //     // setLoad(true);
+    //   });
     // setLoad(false);
-    let email = values.email;
-    let name = values.name;
-    let type = values.type;
-    let status = values.status;
-    axios
-      .get(
-        `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
-      )
-      .then((res) => {
-        console.log(res);
-        setUsers(res.data);
-        // setLoad(true);
-      })
-      .catch((err) => {
-        // setError(err.message);
-        // setLoad(true);
-      });
   }, [values.name, values.email, values.type, values.status]);
   const handleChange = (event) => {
     event.persist();
@@ -121,6 +118,9 @@ const UsersToolbar = (props) => {
 
     setState({ ...state, [anchor]: open });
   };
+  const handleFilter = (event) => {
+    event.preventDefault();
+  };
   const list = (anchor) => (
     <div className={clsx(classes.list)} role="presentation">
       <Card {...rest} className={clsx(classes.root, className)}>
@@ -132,6 +132,7 @@ const UsersToolbar = (props) => {
             color="primary"
             variant="outlined"
             onClick={toggleDrawer(anchor, false)}
+            onKeyDown={toggleDrawer(anchor, false)}
             className={classes.closeBtn}>
             {/* <span style={{ fontSize: '20px' }}>&times; </span> */}
             &times; &nbsp; Close
@@ -217,18 +218,13 @@ const UsersToolbar = (props) => {
               onClick={(toggleDrawer(anchor, false), clearFilter)}
               // type="submit"
               className={classes.closeBtn}>
-              Clear Filter
+              Clear All
             </Button>
           </CardActions>
         </form>
       </Card>
     </div>
   );
-  const handleFilter = (event) => {
-    event.preventDefault();
-    // console.log('in adding');
-    // console.log(values);
-  };
 
   return (
     <div {...rest} className={clsx(classes.root, className)}>
@@ -253,15 +249,14 @@ const UsersToolbar = (props) => {
           <Drawer
             anchor={anchor}
             open={state[anchor]}
-            // onClose={toggleDrawer(anchor, false)}
-          >
+            onClose={toggleDrawer(anchor, false)}>
             {list(anchor)}
           </Drawer>
         </div>
       </div>
       <span className={classes.spacer} />
       {/* {load } */}
-      <UsersTable users={users} />
+      <UsersTable users={users} filter={values} />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import useModal from './useModal';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/styles';
+import Loader from 'react-loader-spinner';
 import {
   Button,
   Card,
@@ -74,14 +75,17 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: 20,
     width: 1
+  },
+  loader: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: '500%'
   }
 }));
 
 const headCells = [
   {
     id: 'name',
-    // numeric: false,
-    // disablePadding: true,
     label: 'Name'
   },
   {
@@ -111,7 +115,6 @@ function EnhancedTableHead(props) {
     onRequestSort
   } = props;
   const createSortHandler = (property) => (event) => {
-    console.log('hi sorting');
     onRequestSort(event, property);
   };
   return (
@@ -120,12 +123,10 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            // sortDirection={orderBy === headCell.id ? order : false}
-          >
+            sortDirection={orderBy === headCell.id ? order : false}>
             <TableSortLabel
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
-              // onClick={dummyFunction}
               onClick={createSortHandler(headCell.id)}>
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -152,45 +153,41 @@ EnhancedTableHead.propTypes = {
 };
 
 const UsersTable = (props) => {
-  let { className, users, ...rest } = props;
+  let { className, users, filter, ...rest } = props;
+  const fil = filter;
+
+  console.log('in user table users are', users);
   const { isShowing, toggle } = useModal();
   const classes = useStyles();
+  const [load, setLoad] = useState(false);
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
-  // const [users, setUsers] = useState([]);
+  let [newUsers, setUsers] = useState(users);
+  console.log('new user data', newUsers);
   // const [selectedUsers, setSelectedUsers] = useState([]);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [page, setPage] = useState(0);
-  const [values, setValues] = useState({
-    name: '',
-    email: '',
-    type: '',
-    status: ''
-  });
+
   useEffect(() => {
-    console.log('in use effect');
-    console.log(orderBy);
-    console.log(order);
-    //   setValues((values) => ({ ...values }));
-    //   // setLoad(false);
-    //   let email = values.email;
-    //   let name = values.name;
-    //   let type = values.type;
-    //   let status = values.status;
-    //   axios
-    //     .get(
-    //       `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
-    //     )
-    //     .then((res) => {
-    //       console.log(res);
-    //       // setUsers(res.data);
-    //       // setLoad(true);
-    //     })
-    //     .catch((err) => {
-    //       // setError(err.message);
-    //       // setLoad(true);
-    //     });values.name, values.email, values.type, values.status
-  }, []);
+    setLoad(false);
+    setUsers(users);
+    var data = {
+      ordBy: orderBy,
+      ord: order,
+      fil: fil,
+      rows: rowsPerPage,
+      page: page
+    };
+    axios
+      .post('http://localhost:5000/api/users/sortUsers', data)
+      .then((res) => {
+        setLoad(true);
+        setUsers(res.data);
+        console.log(newUsers);
+        console.log('response is ', res.data);
+      });
+  }, [fil, rowsPerPage, page, order, orderBy]);
+
   const handlePageChange = (event, page) => {
     setPage(page);
   };
@@ -230,22 +227,29 @@ const UsersTable = (props) => {
   };
   const handleRequestSort = (event, property) => {
     console.log('property is ', property);
-
     const isAsc = orderBy === property && order === 'asc';
+    // var on = ordd.name;
+    // setOrdd()
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
     console.log('orderby', orderBy);
     console.log('order', order);
-    var data = { ordBy: property, ord: order };
+
+    var data = {
+      ordBy: property,
+      ord: order,
+      fil: fil,
+      rows: rowsPerPage,
+      page: page
+    };
     console.log(data);
-    axios
-      .post('http://localhost:5000/api/users/sortUsers', data)
-      .then((res) => {
-        // console.log(res);
-        // setUsers(res);
-        // setUsers(res.data);
-        console.log('response is ', users);
-      });
+    // axios
+    //   .post('http://localhost:5000/api/users/sortUsers', data)
+    //   .then((res) => {
+    //     setUsers(res.data);
+    //     console.log(newUsers);
+    //     console.log('response is ', res.data);
+    //   });
   };
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
@@ -278,11 +282,9 @@ const UsersTable = (props) => {
 
               {/* </TableRow>
               </TableHead>  */}
-              <TableBody>
-                {/* {stableSort(users, getComparator(order, orderBy)) */}
-                {users
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((user) => (
+              {load ? (
+                <TableBody>
+                  {newUsers.slice(0, rowsPerPage).map((user) => (
                     <TableRow className={classes.tableRow} hover key={user.id}>
                       {/* selected={selectedUsers.indexOf(user.id) !== -1}> */}
                       {/* <TableCell padding="checkbox">   
@@ -302,10 +304,6 @@ const UsersTable = (props) => {
                         </div>
                       </TableCell>
                       <TableCell>{user.email}</TableCell>
-                      {/* <TableCell>
-                      {user.address.city}, {user.address.state},{' '}
-                      {user.address.country}
-                    </TableCell> */}
                       <TableCell>{user.type}</TableCell>
                       <TableCell>{user.status}</TableCell>
                       <TableCell>
@@ -325,7 +323,6 @@ const UsersTable = (props) => {
                           </Button>
                         </Link>
                         <Button
-                          // onClick={toggle}
                           onClick={() => {
                             handleDelete(user.id);
                           }}
@@ -334,13 +331,18 @@ const UsersTable = (props) => {
                           <DeleteIcon className={classes.deleteIcon} />
                         </Button>
                       </TableCell>
-                      {/* <TableCell>
-                      {moment(user.createdAt).format('DD/MM/YYYY')}
-                    </TableCell> */}
                     </TableRow>
                   ))}
-                {/* <TableRow>{editForm ? 'yes' : 'no'}</TableRow> */}
-              </TableBody>
+                </TableBody>
+              ) : (
+                <Loader
+                  className={classes.loader}
+                  type="ThreeDots"
+                  color="#0E4681"
+                  height={80}
+                  width={80}
+                />
+              )}
             </Table>
           </div>
         </PerfectScrollbar>
@@ -348,7 +350,7 @@ const UsersTable = (props) => {
       <CardActions className={classes.actions}>
         <TablePagination
           component="div"
-          count={users.length}
+          count={10}
           onChangePage={handlePageChange}
           onChangeRowsPerPage={handleRowsPerPageChange}
           page={page}
@@ -366,6 +368,25 @@ UsersTable.propTypes = {
 };
 
 export default UsersTable;
+// setValues((values) => ({ ...values }));
+//   // setLoad(false);
+// let email = values.email;
+// let name = values.name;
+// let type = values.type;
+// let status = values.status;
+// axios
+//   .get(
+//     `http://localhost:5000/api/users/searchFilter/a${fil.name}/a${fil.email}/a${fil.type}/a${fil.status}`
+//   )
+//   .then((res) => {
+//     console.log(res);
+//     setUsers(res.data);
+//     // setLoad(true);
+//   })
+//   .catch((err) => {
+//     // setError(err.message);
+//     // setLoad(true);
+//   });
 // const handleSelectAll = event => {
 //   const { users } = props;
 

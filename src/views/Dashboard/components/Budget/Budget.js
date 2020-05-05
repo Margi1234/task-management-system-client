@@ -12,6 +12,7 @@ import axios from 'axios';
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
+    // backgroundColor: theme.palette.primary
   },
   content: {
     alignItems: 'center',
@@ -42,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1)
   },
   viewButton: {
-    margin: theme.spacing(2, 0),
+    // margin: theme.spacing(2, 0),
+    margin: '20px 0px 20px 20px',
     backgroundColor: '#0E4681',
     color: 'white',
     boxShadow: 'none'
@@ -90,7 +92,7 @@ const Budget = (props) => {
                 color="textSecondary"
                 gutterBottom
                 variant="body2">
-                CLIENT
+                ADMIN
               </Typography>
               <Typography variant="h3">{totalUsers}</Typography>
             </Grid>

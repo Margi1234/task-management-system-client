@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/styles';
 import { Button } from '@material-ui/core';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { Link } from 'react-router-dom';
 // import { SearchInput } from 'components';
 import FilterListIcon from '@material-ui/icons/FilterList';
@@ -60,29 +61,39 @@ const EmployeeToolbar = (props) => {
   });
 
   const [values, setValues] = useState({
+    empid: '',
     name: '',
     email: '',
-    type: '',
-    status: ''
+    date: '',
+    gender: '',
+    permanentaddress: '',
+    currentaddress: '',
+    contact: '',
+    officeemail: '',
+    designation: '',
+    joiningdate: '',
+    skypeusername: '',
+    office: ''
   });
   useEffect(() => {
     setValues((values) => ({ ...values }));
-    // console.log('in userstoolbar', values);
-    // axios
-    //   .post(
-    //     `http://localhost:5000/api/users/searchFilter/a${name}/a${email}/a${type}/a${status}`
-    //   )
-    //   .then((res) => {
-    //     console.log(res);
-    //     setUsers(res.data);
-    //     // setLoad(true);
-    //   })
-    //   .catch((err) => {
-    //     // setError(err.message);
-    //     // setLoad(true);
-    //   });
-    // setLoad(false);
-  }, [values.name, values.email, values.type, values.status]);
+  }, [
+    values.empid,
+    values.name,
+    values.email,
+    values.gender,
+    values.joiningdate,
+    values.office,
+    values.officeemail,
+    values.permanentaddress,
+    values.skypeusername,
+    values.designation,
+    values.currentaddress,
+    values.contact,
+    // values.department,
+    // values.reportingperson,
+    values.date
+  ]);
   const handleChange = (event) => {
     event.persist();
     setValues({
@@ -92,20 +103,43 @@ const EmployeeToolbar = (props) => {
   };
   const clearFilter = (event) => {
     event.preventDefault();
-    setValues({ ...values, name: '', email: '', type: '', status: '' });
+    setValues({
+      ...values,
+      empid: '',
+      name: '',
+      email: '',
+      date: '',
+      gender: '',
+      permanentaddress: '',
+      currentaddress: '',
+      contact: '',
+      officeemail: '',
+      designation: '',
+      joiningdate: '',
+      skypeusername: '',
+      office: ''
+    });
   };
-  const status = [
+  const designation = [
     {
       value: '',
       label: ''
     },
     {
-      value: 'active',
-      label: 'Active'
+      value: 'trainee',
+      label: 'Trainee'
     },
     {
-      value: 'inactive',
-      label: 'Inactive'
+      value: 'associate team lead',
+      label: 'Associate Team Lead'
+    },
+    {
+      value: 'team lead',
+      label: 'Team Lead'
+    },
+    {
+      value: 'project manager',
+      label: 'Project Manager'
     }
   ];
   const toggleDrawer = (anchor, open) => (event) => {
@@ -146,11 +180,23 @@ const EmployeeToolbar = (props) => {
                   fullWidth
                   type="text"
                   // helperText="Please specify the name"
-                  label="Admin User Name"
+                  label="Employee ID"
+                  margin="dense"
+                  name="empid"
+                  onChange={handleChange}
+                  value={values.empid}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <TextField
+                  fullWidth
+                  type="text"
+                  // helperText="Please specify the name"
+                  label="Name"
                   margin="dense"
                   name="name"
                   onChange={handleChange}
-                  // required
                   value={values.name}
                   variant="outlined"
                 />
@@ -161,9 +207,8 @@ const EmployeeToolbar = (props) => {
                   label="Email Address"
                   margin="dense"
                   name="email"
-                  // type="email"
+                  type="email"
                   onChange={handleChange}
-                  // required
                   value={values.email}
                   variant="outlined"
                 />
@@ -171,29 +216,74 @@ const EmployeeToolbar = (props) => {
               <Grid item md={12} xs={12}>
                 <TextField
                   fullWidth
-                  label="Type"
+                  label="Office"
                   margin="dense"
-                  name="type"
-                  onChange={handleChange}
+                  name="office"
                   type="text"
-                  value={values.type}
+                  onChange={handleChange}
+                  value={values.office}
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <TextareaAutosize
+                  style={{
+                    width: '100%',
+                    fontSize: '16px',
+                    fontFamily: 'arial'
+                  }}
+                  aria-label="minimum height"
+                  rowsMin={5}
+                  placeholder="Permanent Address"
+                  name="permanentaddress"
+                  id="permanentaddress"
+                  value={values.permanentaddress}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <TextareaAutosize
+                  style={{
+                    width: '100%',
+                    fontSize: '16px',
+                    fontFamily: 'arial'
+                  }}
+                  aria-label="minimum height"
+                  rowsMin={5}
+                  placeholder="Current Address"
+                  name="currentaddress"
+                  id="currentaddress"
+                  value={values.currentaddress}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <TextField
+                  // fullWidth
+                  label="Contact"
+                  margin="dense"
+                  name="contact"
+                  type="tel"
+                  maxLength="10"
+                  pattern="[0-9]{3}-[0-9]{2}-[0-9]{3}"
+                  onChange={handleChange}
+                  value={values.contact}
                   variant="outlined"
                 />
               </Grid>
               <Grid item md={12} xs={12}>
                 <TextField
                   fullWidth
-                  label="Select Status"
+                  label="Select Designation"
                   margin="dense"
-                  name="status"
+                  name="designation"
                   onChange={handleChange}
-                  // required
                   select
                   // eslint-disable-next-line react/jsx-sort-props
                   SelectProps={{ native: true }}
-                  value={values.status}
+                  value={values.designation}
                   variant="outlined">
-                  {status.map((option) => (
+                  {designation.map((option) => (
                     <option key={option.value} value={option.value}>
                       {option.label}
                     </option>

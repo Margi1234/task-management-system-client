@@ -1,12 +1,13 @@
 import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import { PrivateRoute } from './PrivateRoute';
+// import { ProtectedRoute } from './ProtectedRoute';
 import { RouteWithLayout } from './components';
 import { Main as MainLayout, Minimal as MinimalLayout } from './layouts';
 
 import {
   Dashboard as DashboardView,
-  ProductList as ProductListView,
+  EmployeeList as EmployeeListView,
   UserList as UserListView,
   Typography as TypographyView,
   Icons as IconsView,
@@ -21,6 +22,8 @@ import ForgotPassword from './views/SignIn/ForgotPassword';
 import ResetPassword from './views/SignIn/ResetPassword';
 import AddUser from './views/UserList/AddUser';
 import UpdateUser from './views/UserList/UpdateUser';
+import AddEmployee from './views/EmployeeList/AddEmployee';
+import UpdateEmployee from './views/EmployeeList/UpdateEmployee';
 const Routes = () => {
   return (
     <Switch>
@@ -44,10 +47,10 @@ const Routes = () => {
         path="/users"
       />
       <RouteWithLayout
-        component={ProductListView}
+        component={EmployeeListView}
         exact
         layout={MainLayout}
-        path="/products"
+        path="/employees"
       />
       <RouteWithLayout
         component={TypographyView}
@@ -97,11 +100,11 @@ const Routes = () => {
         layout={MinimalLayout}
         path="/not-found"
       />
-      <RouteWithLayout
+      {/* <RouteWithLayout
         path="/resetpassword"
         component={ResetPassword}
         layout={MinimalLayout}
-      />
+      /> */}
       <PrivateRoute
         path="/resetpassword"
         component={ResetPassword}
@@ -115,6 +118,16 @@ const Routes = () => {
       <RouteWithLayout
         path="/users/update"
         component={UpdateUser}
+        layout={MainLayout}
+      />
+      <RouteWithLayout
+        path="/employees/add"
+        component={AddEmployee}
+        layout={MainLayout}
+      />
+      <RouteWithLayout
+        path="/employees/update"
+        component={UpdateEmployee}
         layout={MainLayout}
       />
       <Redirect to="/not-found" />

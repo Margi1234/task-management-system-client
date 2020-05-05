@@ -6,7 +6,7 @@ import { useMediaQuery } from '@material-ui/core';
 
 import { Sidebar, Topbar, Footer } from './components';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: 56,
     height: '100%',
@@ -18,11 +18,14 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: 240
   },
   content: {
-    height: '100%'
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between'
   }
 }));
 
-const Main = props => {
+const Main = (props) => {
   const { children } = props;
 
   const classes = useStyles();
@@ -48,8 +51,7 @@ const Main = props => {
       className={clsx({
         [classes.root]: true,
         [classes.shiftContent]: isDesktop
-      })}
-    >
+      })}>
       <Topbar onSidebarOpen={handleSidebarOpen} />
       <Sidebar
         onClose={handleSidebarClose}

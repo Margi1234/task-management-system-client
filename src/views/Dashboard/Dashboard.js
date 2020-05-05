@@ -3,8 +3,8 @@ import { withStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 
 import {
-  Budget
-  // TotalUsers,
+  Budget,
+  TotalEmployees
   // TasksProgress,
   // TotalProfit,
   // LatestSales,
@@ -37,10 +37,10 @@ class Dashboard extends Component {
             <Budget />
           </Grid>
 
-          {/* <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <TotalUsers />
+          <Grid item>
+            <TotalEmployees />
           </Grid>
-          <Grid item lg={3} sm={6} xl={3} xs={12}>
+          {/*  <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TasksProgress />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>

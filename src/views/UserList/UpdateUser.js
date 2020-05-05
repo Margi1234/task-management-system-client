@@ -53,11 +53,11 @@ const UpdateUser = (props) => {
       .then((res) => {
         if (res.status === 200) {
           successMessage(true);
-          localStorage.removeItem('updateName');
-          localStorage.removeItem('updateEmail');
-          localStorage.removeItem('updateType');
-          localStorage.removeItem('updateStatus');
-          localStorage.removeItem('updateId');
+          // localStorage.removeItem('updateName');
+          // localStorage.removeItem('updateEmail');
+          // localStorage.removeItem('updateType');
+          // localStorage.removeItem('updateStatus');
+          // localStorage.removeItem('updateId');
         }
         console.log(res);
       });

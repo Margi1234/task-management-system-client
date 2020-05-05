@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import FormLabel from '@material-ui/core/FormLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
+// import { v4 as uuidv4 } from 'uuid';
+// import FormLabel from '@material-ui/core/FormLabel';
+// import FormControl from '@material-ui/core/FormControl';
+// import FormGroup from '@material-ui/core/FormGroup';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import { List, ListItem, ListItemText } from '@material-ui/core';
+// import FormHelperText from '@material-ui/core/FormHelperText';
 import {
   Card,
   CardHeader,
@@ -70,7 +72,7 @@ const useStyles = makeStyles(() => ({
     // margin: theme.spacing(3)
   }
 }));
-
+// const experts = ['a', 'b', 'c', 'd', 'e'];
 const AddEmployee = (props) => {
   const { className, ...rest } = props;
   const { history } = props;
@@ -81,6 +83,7 @@ const AddEmployee = (props) => {
     setTabValue(newTabValue);
   };
   const [values, setValues] = useState({
+    empid: '',
     name: '',
     email: '',
     date: '',
@@ -93,7 +96,7 @@ const AddEmployee = (props) => {
     designation: 'trainee',
     joiningdate: '',
     skypeusername: '',
-    office: '',
+    office: '304',
     reportingperson: {
       hasmukhtank: false,
       vishalvaland: false,
@@ -113,12 +116,13 @@ const AddEmployee = (props) => {
   const handleCheckbox = (event) => {
     setValues({ ...values, [event.target.name]: event.target.checked });
   };
-  const handleReportingPersonChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.checked });
-  };
-  const handleDepartmentChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.checked });
-  };
+  // const handleReportingPersonChange = (event) => {
+  //   console.log('in reporting change');
+  //   setValues({ ...values, [event.target.name]: event.target.checked });
+  // };
+  // const handleDepartmentChange = (event) => {
+  //   setValues({ ...values, [event.target.name]: event.target.checked });
+  // };
   const [success, successMessage] = useState(false);
   const handleBack = () => {
     history.goBack();
@@ -130,19 +134,38 @@ const AddEmployee = (props) => {
       [event.target.name]: event.target.value
     });
   };
+  const handleEmpID = () => {
+    var nm = values.name;
+    var dt = values.date;
+    var empid =
+      'AP' +
+      nm.toUpperCase() +
+      dt.substring(8) +
+      dt.substring(5, 7) +
+      dt.substring(0, 4);
 
+    console.log(empid);
+    values.empid = empid;
+    if (values.addresschecked == true) {
+      values.currentaddress = values.permanentaddress;
+    }
+    // console.log('in adding');
+    // setValues({ ...values, empid: empid });
+  };
   const handleAdd = (event) => {
     event.preventDefault();
-    console.log('in adding');
+
+    handleEmpID();
+
     console.log(values);
-    // axios
-    //   .post('http://localhost:5000/api/users/users/add', values)
-    //   .then((res) => {
-    //     if (res.data.error === false) {
-    //       successMessage(true);
-    //     }
-    //     console.log(res);
-    //   });
+    axios
+      .post('http://localhost:5000/api/users/employees/add', values)
+      .then((res) => {
+        if (res.data.error === false) {
+          successMessage(true);
+        }
+        console.log(res);
+      });
   };
   const gender = [
     {
@@ -404,10 +427,13 @@ const AddEmployee = (props) => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item md={7} xs={12}>
+
+              {/* <Grid item md={7} xs={12}>
+                <input type="checkbox" />
                 <FormControl
                   component="fieldset"
-                  className={classes.formControl}>
+                  className={classes.formControl}
+                  name="controlCheck">
                   <FormLabel component="legend">Reporting Person</FormLabel>
                   <FormGroup style={{ paddingLeft: '50px' }}>
                     <FormControlLabel
@@ -462,8 +488,8 @@ const AddEmployee = (props) => {
                     />
                   </FormGroup>
                 </FormControl>
-              </Grid>
-              <Grid item md={7} xs={12}>
+              </Grid> */}
+              {/* <Grid item md={7} xs={12}>
                 <FormControl
                   component="fieldset"
                   className={classes.formControl}>
@@ -531,7 +557,7 @@ const AddEmployee = (props) => {
                     />
                   </FormGroup>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item md={7} xs={12}>
                 <TextField
                   fullWidth
